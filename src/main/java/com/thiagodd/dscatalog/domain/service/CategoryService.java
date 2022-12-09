@@ -3,16 +3,18 @@ package com.thiagodd.dscatalog.domain.service;
 import com.thiagodd.dscatalog.domain.model.Category;
 import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
-import com.thiagodd.dscatalog.domain.service.exceptions.EntityNotFoundException;
+import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {
+
+    String MSG_NOT_FOUND = "Categoria com id %d não foi encontrada!";
 
     private final CategoryRepository categoryRepository;
 
@@ -28,8 +30,8 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Categoria com id %d não foi encontrada!", id )
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
+                String.format(MSG_NOT_FOUND, id )
         ));
         return new CategoryDto(category);
     }
@@ -40,5 +42,18 @@ public class CategoryService {
         BeanUtils.copyProperties(categoryDto, category, "id");
         category = categoryRepository.save(category);
         return new CategoryDto(category);
+    }
+
+    @Transactional
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
+        try{
+            Category category = categoryRepository.getReferenceById(id);
+           category.setName(categoryDto.getName());
+            category = categoryRepository.save(category);
+            return new CategoryDto(category);
+        }catch (EntityNotFoundException exception){
+            throw new ResourceNotFoundException(String.format(MSG_NOT_FOUND, id));
+        }
+
     }
 }
