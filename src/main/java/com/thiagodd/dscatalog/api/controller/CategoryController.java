@@ -1,6 +1,7 @@
 package com.thiagodd.dscatalog.api.controller;
 
 import com.thiagodd.dscatalog.domain.model.Category;
+import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +22,14 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-        System.out.println("Entrou aqui");
-        List<Category> categoryList = categoryService.findAll();
+    public ResponseEntity<List<CategoryDto>> findAll() {
+        List<CategoryDto> categoryList = categoryService.findAll();
         return ResponseEntity.ok().body(categoryList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(new Category(1L, "Books"));
+    public ResponseEntity<CategoryDto> findById(@PathVariable Long id) {
+        CategoryDto categoryDto = categoryService.findById(id);
+        return ResponseEntity.ok().body(categoryDto);
     }
 }

@@ -1,8 +1,9 @@
 package com.thiagodd.dscatalog.domain.service;
 
 import com.thiagodd.dscatalog.domain.model.Category;
+import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.thiagodd.dscatalog.domain.service.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,21 +15,22 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
+
     @Transactional(readOnly = true)
-    public List<Category> findAll(){
-        return categoryRepository.findAll();
+    public List<CategoryDto> findAll() {
+        List<Category> categoryList = categoryRepository.findAll();
+        return categoryList.stream().map(CategoryDto::new).toList();
     }
 
-    public Category findById(Long id){
-        Optional<Category> category = categoryRepository.findById(id);
-        if(category.isPresent()){
-            return category.get();
-        }
-        throw new EntityNotFoundException("Entidade não encontrada");
+    @Transactional(readOnly = true)
+    public CategoryDto findById(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                String.format("Categoria com id %d não foi encontrada!", id )
+        ));
+        return new CategoryDto(category);
     }
 
 
