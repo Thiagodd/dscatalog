@@ -4,6 +4,7 @@ import com.thiagodd.dscatalog.domain.model.Category;
 import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +34,11 @@ public class CategoryService {
         return new CategoryDto(category);
     }
 
-
+    @Transactional
+    public CategoryDto insert(CategoryDto categoryDto) {
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDto, category, "id");
+        category = categoryRepository.save(category);
+        return new CategoryDto(category);
+    }
 }
