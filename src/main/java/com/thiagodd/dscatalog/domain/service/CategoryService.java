@@ -1,7 +1,9 @@
 package com.thiagodd.dscatalog.domain.service;
 
 import com.thiagodd.dscatalog.domain.model.Category;
+import com.thiagodd.dscatalog.domain.model.Product;
 import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
+import com.thiagodd.dscatalog.domain.model.dto.ProductDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;

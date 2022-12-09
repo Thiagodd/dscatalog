@@ -1,12 +1,14 @@
 package com.thiagodd.dscatalog.domain.service;
 
+import com.thiagodd.dscatalog.domain.model.Category;
 import com.thiagodd.dscatalog.domain.model.Product;
+import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.model.dto.ProductDto;
+import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.repository.ProductRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -22,15 +24,17 @@ public class ProductService {
 
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDto> findAllPaged(PageRequest pageRequest) {
         Page<Product> productPage = productRepository.findAll(pageRequest);
-        return productPage.map(x -> new ProductDto(x, x.getCategories()));
+        return productPage.map(ProductDto::new);
     }
 
     @Transactional(readOnly = true)
@@ -38,13 +42,13 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 String.format(MSG_ENTITY_NOT_FOUND, id)
         ));
-        return new ProductDto(product, product.getCategories());
+        return new ProductDto(product);
     }
 
     @Transactional
     public ProductDto insert(ProductDto productDto) {
         Product product = new Product();
-        BeanUtils.copyProperties(productDto, product, "id");
+        copyDtoToEntity(productDto, product);
         product = productRepository.save(product);
         return new ProductDto(product);
     }
@@ -53,7 +57,7 @@ public class ProductService {
     public ProductDto update(Long id, ProductDto productDto) {
         try {
             Product product = productRepository.getReferenceById(id);
-            BeanUtils.copyProperties(productDto, product, "id");
+            copyDtoToEntity(productDto, product);
             product = productRepository.save(product);
             return new ProductDto(product);
         } catch (EntityNotFoundException exception) {
@@ -69,5 +73,20 @@ public class ProductService {
         } catch (DataIntegrityViolationException exception) {
             throw new DatabaseIntegratyViolationException(String.format(MSG_ENTITY_IN_USE, id));
         }
+    }
+
+    public void copyDtoToEntity(ProductDto dto, Product entity){
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPrice(dto.getPrice());
+        entity.getCategories().clear();
+
+        for (CategoryDto catDto : dto.getCategories()) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            entity.getCategories().add(category);
+        }
+
     }
 }
