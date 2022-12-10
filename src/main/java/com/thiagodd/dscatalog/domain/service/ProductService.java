@@ -12,7 +12,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,18 +74,17 @@ public class ProductService {
         }
     }
 
-    public void copyDtoToEntity(ProductDto dto, Product entity){
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setDate(dto.getDate());
-        entity.setImgUrl(dto.getImgUrl());
-        entity.setPrice(dto.getPrice());
-        entity.getCategories().clear();
+    public void copyDtoToEntity(ProductDto dto, Product product) {
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setDate(dto.getDate());
+        product.setImgUrl(dto.getImgUrl());
+        product.setPrice(dto.getPrice());
+        product.getCategories().clear();
 
         for (CategoryDto catDto : dto.getCategories()) {
             Category category = categoryRepository.getReferenceById(catDto.getId());
-            entity.getCategories().add(category);
+            product.getCategories().add(category);
         }
-
     }
 }

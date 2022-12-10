@@ -41,8 +41,4 @@ public class ProductDto implements Serializable {
         product.getCategories().forEach(cat -> this.categories.add(new CategoryDto(cat)));
     }
 
-//    public ProductDto(Product product, Set<Category> categories) {
-//        this(product);
-//        categories.forEach(cat -> this.categories.add(new CategoryDto(cat)));
-//    }
 }
