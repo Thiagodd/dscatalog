@@ -1,9 +1,7 @@
 package com.thiagodd.dscatalog.domain.service;
 
 import com.thiagodd.dscatalog.domain.model.Category;
-import com.thiagodd.dscatalog.domain.model.Product;
 import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
-import com.thiagodd.dscatalog.domain.model.dto.ProductDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
@@ -12,7 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +27,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
-        Page<Category> categoryList = categoryRepository.findAll(pageRequest);
+    public Page<CategoryDto> findAll(Pageable pageable) {
+        Page<Category> categoryList = categoryRepository.findAll(pageable);
         return categoryList.map(CategoryDto::new);
     }
 
@@ -65,9 +63,9 @@ public class CategoryService {
     public void deleteById(Long id) {
         try {
             categoryRepository.deleteById(id);
-        }catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             throw new ResourceNotFoundException(String.format(MSG_ENTITY_NOT_FOUND, id));
-        }catch (DataIntegrityViolationException exception){
+        } catch (DataIntegrityViolationException exception) {
             throw new DatabaseIntegratyViolationException(String.format(MSG_ENTITY_IN_USE, id));
         }
     }

@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,6 @@ public class ProductService {
 
     String MSG_ENTITY_NOT_FOUND = "[CUSTOM] Produto com id %d não foi encontrada!";
     String MSG_ENTITY_IN_USE = "[CUSTOM] Produto com id %d não pode ser deletada, pois está em uso!";
-
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -32,8 +32,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> findAllPaged(PageRequest pageRequest) {
-        Page<Product> productPage = productRepository.findAll(pageRequest);
+    public Page<ProductDto> findAll(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(ProductDto::new);
     }
 
