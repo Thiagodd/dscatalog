@@ -5,6 +5,7 @@ import com.thiagodd.dscatalog.domain.model.User;
 import com.thiagodd.dscatalog.domain.model.dto.RoleDto;
 import com.thiagodd.dscatalog.domain.model.dto.UserDto;
 import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
+import com.thiagodd.dscatalog.domain.model.dto.UserUpdateDto;
 import com.thiagodd.dscatalog.domain.repository.RoleRepository;
 import com.thiagodd.dscatalog.domain.repository.UserRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
@@ -58,7 +59,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto update(Long id, UserDto userDto) {
+    public UserDto update(Long id, UserUpdateDto userDto) {
         try {
             User user = userRepository.getReferenceById(id);
             copyDtoToEntity(userDto, user);

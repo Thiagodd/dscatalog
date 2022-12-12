@@ -2,6 +2,7 @@ package com.thiagodd.dscatalog.api.controller;
 
 import com.thiagodd.dscatalog.domain.model.dto.UserDto;
 import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
+import com.thiagodd.dscatalog.domain.model.dto.UserUpdateDto;
 import com.thiagodd.dscatalog.domain.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -50,9 +51,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
-        userDto = userService.update(id, userDto);
-        return ResponseEntity.ok().body(userDto);
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userDto) {
+        UserDto newDto = userService.update(id, userDto);
+        return ResponseEntity.ok().body(newDto);
     }
 
     @DeleteMapping("/{id}")

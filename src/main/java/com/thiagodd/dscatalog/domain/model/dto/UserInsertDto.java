@@ -1,5 +1,6 @@
 package com.thiagodd.dscatalog.domain.model.dto;
 
+import com.thiagodd.dscatalog.domain.service.validation.UserInsertValid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 
+@UserInsertValid
 @Setter
 @Getter
 @AllArgsConstructor
