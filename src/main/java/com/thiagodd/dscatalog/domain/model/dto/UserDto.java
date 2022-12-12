@@ -1,6 +1,8 @@
 package com.thiagodd.dscatalog.domain.model.dto;
 
 import com.thiagodd.dscatalog.domain.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +24,14 @@ public class UserDto implements Serializable {
     private static final long serialVersionUID = 482419646819388202L;
 
     private Long id;
+
+    @NotEmpty(message = "Campo obrigatório")
     private String firstName;
+
+    @NotEmpty(message = "Campo obrigatório")
     private String lastName;
+
+    @Email(message = "Email invalido! Tente outro.")
     private String email;
 
     private final Set<RoleDto> roles = new HashSet<>();

@@ -3,6 +3,7 @@ package com.thiagodd.dscatalog.api.controller;
 import com.thiagodd.dscatalog.domain.model.dto.UserDto;
 import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
 import com.thiagodd.dscatalog.domain.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.net.URI;
 public class UserController {
 
     private final UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> insert(@RequestBody UserInsertDto userInsertDto){
+    public ResponseEntity<UserDto> insert(@Valid @RequestBody UserInsertDto userInsertDto) {
         UserDto userDto = userService.insert(userInsertDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(userDto.getId()).toUri();
@@ -48,13 +50,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
         userDto = userService.update(id, userDto);
         return ResponseEntity.ok().body(userDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

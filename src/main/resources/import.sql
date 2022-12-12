@@ -1256,8 +1256,6 @@ insert into tb_product_category (product_id, category_id) values (248, 47);
 insert into tb_product_category (product_id, category_id) values (249, 170);
 insert into tb_product_category (product_id, category_id) values (250, 202);
 
-
-
 # Dados inseredos manualmente para testes
 INSERT INTO tb_user (id, first_name, last_name, email, password) VALUES (251, 'Alex', 'Brown', 'alex@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 INSERT INTO tb_user (id, first_name, last_name, email, password) VALUES (252, 'Maria', 'Green', 'maria@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');

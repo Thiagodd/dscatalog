@@ -1,7 +1,10 @@
 package com.thiagodd.dscatalog.domain.model.dto;
 
-import com.thiagodd.dscatalog.domain.model.Category;
 import com.thiagodd.dscatalog.domain.model.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +13,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.thiagodd.dscatalog.domain.model.Product} entity
@@ -23,10 +25,17 @@ public class ProductDto implements Serializable {
     private static final long serialVersionUID = -5496122317713441552L;
 
     private Long id;
+
+    @Size(min = 5, max = 60, message = "O tamanho do nome deve ser entre 5 e 60 caracteres")
+    @NotBlank(message = "Campo obrigatório")
     private String name;
     private String description;
+
+    @Positive(message = "O preço deve ser um valor positivo")
     private Double price;
     private String imgUrl;
+
+    @PastOrPresent(message = "A data do produto não pode ser futura.")
     private Instant date;
 
     private List<CategoryDto> categories = new ArrayList<>();

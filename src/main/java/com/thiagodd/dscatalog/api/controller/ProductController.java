@@ -2,10 +2,9 @@ package com.thiagodd.dscatalog.api.controller;
 
 import com.thiagodd.dscatalog.domain.model.dto.ProductDto;
 import com.thiagodd.dscatalog.domain.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +40,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> insert(@RequestBody ProductDto productDto){
+    public ResponseEntity<ProductDto> insert(@Valid @RequestBody ProductDto productDto){
         productDto = productService.insert(productDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(productDto.getId()).toUri();
@@ -49,7 +48,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto productDto){
+    public ResponseEntity<ProductDto> update(@PathVariable Long id,@Valid @RequestBody ProductDto productDto){
         productDto = productService.update(id, productDto);
         return ResponseEntity.ok().body(productDto);
     }

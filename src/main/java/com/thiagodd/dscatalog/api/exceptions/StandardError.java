@@ -1,4 +1,4 @@
-package com.thiagodd.dscatalog.api.controller.exceptions;
+package com.thiagodd.dscatalog.api.exceptions;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
