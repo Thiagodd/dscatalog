@@ -4,8 +4,8 @@ import com.thiagodd.dscatalog.api.exceptions.FieldMessage;
 import com.thiagodd.dscatalog.domain.model.User;
 import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
 import com.thiagodd.dscatalog.domain.repository.UserRepository;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 import java.util.ArrayList;
 import java.util.List;

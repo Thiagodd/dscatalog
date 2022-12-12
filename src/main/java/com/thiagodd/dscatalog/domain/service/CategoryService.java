@@ -5,7 +5,7 @@ import com.thiagodd.dscatalog.domain.model.dto.CategoryDto;
 import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 @Service
 public class CategoryService {
@@ -51,7 +53,7 @@ public class CategoryService {
     @Transactional
     public CategoryDto update(Long id, CategoryDto CategoryDto) {
         try {
-            Category category = categoryRepository.getReferenceById(id);
+            Category category = categoryRepository.getOne(id);
             BeanUtils.copyProperties(CategoryDto, category, "id");
             category = categoryRepository.save(category);
             return new CategoryDto(category);

@@ -1,8 +1,8 @@
 package com.thiagodd.dscatalog.domain.model.dto;
 
 import com.thiagodd.dscatalog.domain.model.User;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -10,20 +10,29 @@ import com.thiagodd.dscatalog.domain.repository.RoleRepository;
 import com.thiagodd.dscatalog.domain.repository.UserRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    String MSG_ENTITY_NOT_FOUND = "[CUSTOM] Produto com id %d não foi encontrada!";
-    String MSG_ENTITY_IN_USE = "[CUSTOM] Produto com id %d não pode ser deletada, pois está em uso!";
+    String MSG_ENTITY_NOT_FOUND_BY_ID = "[CUSTOM] Usuario com id %d não foi encontrado!";
+    String MSG_ENTITY_NOT_FOUND_BY_EMAIL = "[CUSTOM] Usuario com email %s não foi encontrado!";
+    String MSG_ENTITY_FOUND_BY_EMAIL = "[CUSTOM] Usuario com email %s foi encontrado!";
+    String MSG_ENTITY_IN_USE = "[CUSTOM] usuario com id %d não pode ser deletada, pois está em uso!";
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -44,7 +53,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format(MSG_ENTITY_NOT_FOUND, id)
+                String.format(MSG_ENTITY_NOT_FOUND_BY_ID, id)
         ));
         return new UserDto(user);
     }
@@ -61,12 +70,12 @@ public class UserService {
     @Transactional
     public UserDto update(Long id, UserUpdateDto userDto) {
         try {
-            User user = userRepository.getReferenceById(id);
+            User user = userRepository.getById(id);
             copyDtoToEntity(userDto, user);
             user = userRepository.save(user);
             return new UserDto(user);
         } catch (EntityNotFoundException exception) {
-            throw new ResourceNotFoundException(String.format(MSG_ENTITY_NOT_FOUND, id));
+            throw new ResourceNotFoundException(String.format(MSG_ENTITY_NOT_FOUND_BY_ID, id));
         }
     }
 
@@ -74,7 +83,7 @@ public class UserService {
         try {
             userRepository.deleteById(id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ResourceNotFoundException(String.format(MSG_ENTITY_NOT_FOUND, id));
+            throw new ResourceNotFoundException(String.format(MSG_ENTITY_NOT_FOUND_BY_ID, id));
         } catch (DataIntegrityViolationException exception) {
             throw new DatabaseIntegratyViolationException(String.format(MSG_ENTITY_IN_USE, id));
         }
@@ -86,8 +95,20 @@ public class UserService {
         user.setEmail(dto.getEmail());
 
         for (RoleDto catDto : dto.getRoles()) {
-            Role role = roleRepository.getReferenceById(catDto.getId());
+            Role role = roleRepository.getById(catDto.getId());
             user.getRoles().add(role);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByEmail(username);
+        if(user == null){
+            logger.error(String.format(MSG_ENTITY_NOT_FOUND_BY_EMAIL, username));
+            throw new UsernameNotFoundException("Email not fount");
+        }
+        logger.info(String.format(MSG_ENTITY_FOUND_BY_EMAIL, username));
+        return userRepository.findByEmail(username);
     }
 }

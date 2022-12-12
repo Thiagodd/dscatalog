@@ -2,7 +2,7 @@ package com.thiagodd.dscatalog.domain.model.dto;
 
 import com.thiagodd.dscatalog.domain.model.Role;
 import com.thiagodd.dscatalog.domain.model.User;
-import jakarta.persistence.Entity;
+import javax.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

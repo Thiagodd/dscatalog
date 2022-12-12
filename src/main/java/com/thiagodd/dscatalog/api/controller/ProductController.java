@@ -2,7 +2,7 @@ package com.thiagodd.dscatalog.api.controller;
 
 import com.thiagodd.dscatalog.domain.model.dto.ProductDto;
 import com.thiagodd.dscatalog.domain.service.ProductService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

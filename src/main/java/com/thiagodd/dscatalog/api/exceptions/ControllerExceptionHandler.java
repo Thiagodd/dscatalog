@@ -2,7 +2,7 @@ package com.thiagodd.dscatalog.api.exceptions;
 
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

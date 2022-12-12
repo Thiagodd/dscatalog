@@ -5,7 +5,7 @@ import com.thiagodd.dscatalog.domain.model.dto.RoleDto;
 import com.thiagodd.dscatalog.domain.repository.RoleRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -51,7 +51,7 @@ public class RoleService {
     @Transactional
     public RoleDto update(Long id, RoleDto RoleDto) {
         try {
-            Role role = roleRepository.getReferenceById(id);
+            Role role = roleRepository.getById(id);
             BeanUtils.copyProperties(RoleDto, role, "id");
             role = roleRepository.save(role);
             return new RoleDto(role);

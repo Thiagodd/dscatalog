@@ -4,9 +4,9 @@ import com.thiagodd.dscatalog.api.exceptions.FieldMessage;
 import com.thiagodd.dscatalog.domain.model.User;
 import com.thiagodd.dscatalog.domain.model.dto.UserUpdateDto;
 import com.thiagodd.dscatalog.domain.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.ArrayList;

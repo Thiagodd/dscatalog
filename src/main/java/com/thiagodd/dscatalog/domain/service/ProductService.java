@@ -8,7 +8,7 @@ import com.thiagodd.dscatalog.domain.repository.CategoryRepository;
 import com.thiagodd.dscatalog.domain.repository.ProductRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
 import com.thiagodd.dscatalog.domain.service.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -55,7 +55,7 @@ public class ProductService {
     @Transactional
     public ProductDto update(Long id, ProductDto productDto) {
         try {
-            Product product = productRepository.getReferenceById(id);
+            Product product = productRepository.getById(id);
             copyDtoToEntity(productDto, product);
             product = productRepository.save(product);
             return new ProductDto(product);
@@ -83,7 +83,7 @@ public class ProductService {
         product.getCategories().clear();
 
         for (CategoryDto catDto : dto.getCategories()) {
-            Category category = categoryRepository.getReferenceById(catDto.getId());
+            Category category = categoryRepository.getById(catDto.getId());
             product.getCategories().add(category);
         }
     }
