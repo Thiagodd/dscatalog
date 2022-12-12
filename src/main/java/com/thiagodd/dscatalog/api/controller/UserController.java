@@ -1,6 +1,7 @@
 package com.thiagodd.dscatalog.api.controller;
 
 import com.thiagodd.dscatalog.domain.model.dto.UserDto;
+import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
 import com.thiagodd.dscatalog.domain.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +40,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> insert(@RequestBody UserDto userDto){
-        userDto = userService.insert(userDto);
+    public ResponseEntity<UserDto> insert(@RequestBody UserInsertDto userInsertDto){
+        UserDto userDto = userService.insert(userInsertDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);

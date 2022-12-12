@@ -4,6 +4,7 @@ import com.thiagodd.dscatalog.domain.model.Role;
 import com.thiagodd.dscatalog.domain.model.User;
 import com.thiagodd.dscatalog.domain.model.dto.RoleDto;
 import com.thiagodd.dscatalog.domain.model.dto.UserDto;
+import com.thiagodd.dscatalog.domain.model.dto.UserInsertDto;
 import com.thiagodd.dscatalog.domain.repository.RoleRepository;
 import com.thiagodd.dscatalog.domain.repository.UserRepository;
 import com.thiagodd.dscatalog.domain.service.exceptions.DatabaseIntegratyViolationException;
@@ -13,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +26,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -45,9 +49,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto insert(UserDto userDto) {
+    public UserDto insert(UserInsertDto userDto) {
         User user = new User();
         copyDtoToEntity(userDto, user);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user = userRepository.save(user);
         return new UserDto(user);
     }
@@ -74,7 +79,7 @@ public class UserService {
         }
     }
 
-    public void copyDtoToEntity(UserDto dto, User user){
+    public void copyDtoToEntity(UserDto dto, User user) {
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
